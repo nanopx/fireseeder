@@ -18,7 +18,8 @@ const cli = meow(
     --include, -i  Collection name to seed (Only works if --include-all flag is set to false)
 
   Examples
-    $ firestore-seeder
+    $ firestore-seeder seed -a
+    Seed all data to firestore
   `,
   {
     flags: {
