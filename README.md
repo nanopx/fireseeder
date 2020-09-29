@@ -4,7 +4,10 @@ Commandline tool for seeding Firestore data
 
 *This tool is WIP and not ready to be used yet*
 
-## Install
+
+## Getting Started
+
+1. Install firestore-seeder
 
 #### npm
 
@@ -17,6 +20,17 @@ $ npm install firestore-seeder --save-dev
 ```bash
 $ yarn add firestore-seeder -D
 ```
+
+2. Download the Firebase Admin SDK json secret from the Firebase console, and place it somewhere in your project directory.
+3. Create `seed` directory in your project root (where your package.json is created)
+4. Add your config inside package.json
+```json
+"firestore-seeder": {
+  "databaseUrl": "https://xxxxxx.firebaseio.com",
+  "credential": "./path/to/credential.json"
+},
+```
+
 
 ## Configuration
 
@@ -48,9 +62,7 @@ $ firestore-seeder seed [options]
     "databaseUrl": "https://xxxxxx.firebaseio.com",
     "credential": "./secret/credential.json",
     "lang": "en"
-    // ...
   },
-  // ...
 }
 ```
 
