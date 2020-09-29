@@ -24,7 +24,7 @@ $ yarn add firestore-seeder -D
 
 There are 3 ways to configure your project:
 
-1. Use the CLI args
+1. Use the CLI options
 2. Use the `firestore-seeder` key in your package.json
 3. Use environment variables
 
