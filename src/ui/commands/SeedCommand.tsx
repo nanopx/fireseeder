@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'ink'
 import { Loading } from '@/ui/components/Loading'
-import { SeedOptions } from '@/core/Seeder'
 import { useSeeder } from '@/core/hooks/useSeeder'
 import { useFirestore } from '@/lib/hooks/useFirestore'
 import { FirestoreSeederConfig } from '@/lib/utils/collectUserConfig'
 
-export type SeedCommandProps = FirestoreSeederConfig & SeedOptions
+export type SeedCommandProps = FirestoreSeederConfig
 
 export const SeedCommand: React.FC<SeedCommandProps> = (props) => {
   const [loading, setLoading] = useState(true)
@@ -15,7 +14,7 @@ export const SeedCommand: React.FC<SeedCommandProps> = (props) => {
   const { seed } = useSeeder(firestore, props)
 
   useEffect(() => {
-    seed()
+    seed('hello')
     // const timerId = setTimeout(() => {
     //   setLoading(false)
     //   process.exit(0)

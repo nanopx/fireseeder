@@ -14,7 +14,7 @@ export interface FirestoreSeederConfig {
 }
 
 const defaultConfig: FirestoreSeederConfig = {
-  seedDir: './seed',
+  seedDir: './seeds',
   databaseUrl: '',
   credential: './serviceAccountCredentials.json',
   idKey: '_id',

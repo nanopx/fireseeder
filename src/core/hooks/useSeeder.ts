@@ -1,10 +1,10 @@
 import admin from 'firebase-admin'
 import { useCallback, useMemo } from 'react'
-import { Seeder, SeederOptions, SeedOptions } from '../Seeder'
+import { Seeder, SeederOptions } from '../Seeder'
 
 export const useSeeder = (
   firestore: admin.firestore.Firestore,
-  options: SeederOptions & SeedOptions
+  options: SeederOptions
 ) => {
   const seeder = useMemo(() => new Seeder(firestore, options), [
     firestore,
@@ -12,11 +12,15 @@ export const useSeeder = (
   ])
 
   const seed = useCallback(
-    (seedOptions: Partial<SeedOptions> = {}) => {
-      return seeder.seed({ ...options, ...seedOptions })
+    (collections: string | string[] = []) => {
+      return seeder.seed(collections)
     },
-    [seeder, options]
+    [seeder]
   )
 
-  return { seed, seeder }
+  const seedAll = useCallback(() => {
+    return seeder.seedAll()
+  }, [seeder])
+
+  return { seeder, seed, seedAll }
 }

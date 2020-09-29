@@ -59,7 +59,7 @@ $ firestore-seeder seed [options]
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "seed": "firestore-seeder seed"
+    "seed": "firestore-seeder seed --fresh"
   },
   "firestore-seeder": {
     "databaseUrl": "https://xxxxxx.firebaseio.com",
@@ -99,7 +99,7 @@ The options below are currently supported:
 ### Example seed file
 
 ```js
-import { createSeeds, setLocale, name } from 'firestore-seeder'
+import { createSeeds, name } from 'firestore-seeder'
 
 export default createSeeds(100, (index) => ({
   _id: index + 1,
@@ -113,7 +113,7 @@ export default createSeeds(100, (index) => ({
 
 ### `seedDir` [string]
 
-Default: `'./seed'`
+Default: `'./seeds'`
 
 Path to directory containing the seed files
 

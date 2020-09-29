@@ -46,6 +46,11 @@ const cli = meow(
         alias: 'c',
         default: userConfig.credential,
       },
+      fresh: {
+        type: 'boolean',
+        alias: 'f',
+        default: userConfig.fresh,
+      },
       includeAll: {
         type: 'boolean',
         alias: 'a',

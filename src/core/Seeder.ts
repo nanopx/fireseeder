@@ -1,25 +1,22 @@
 import admin from 'firebase-admin'
 import { readdirSync } from 'fs'
+import { basename, extname } from 'path'
+import { EventEmitter } from 'events'
 import { getUserPath } from '@/lib/utils/getUserPath'
 import { importEsmSync } from '@/lib/utils/importEsm'
-import { basename, extname } from 'path'
+// import { CollectionSeed } from './CollectionSeed'
 
 export interface SeederOptions {
   seedDir: string
   idKey: string
+  fresh: boolean
 }
 
 export const defaultSeederOptions: SeederOptions = {
   seedDir: './seeds',
   idKey: '_id',
+  fresh: false,
 }
-
-export interface SeedOptions {}
-
-export const defaultSeedOptions: SeedOptions = {}
-
-// private clearCollection(collection) {}
-// private clearAllCollections() {}
 
 const ALLOWED_EXTENSIONS = ['js', 'json']
 
@@ -43,42 +40,53 @@ const findSeedFiles = (seedDir: string) => {
   return seedFiles
 }
 
-class Collection {
-  public name: string
-  private seedData: any[]
-
-  /**
-   * Collection constructor
-   * @param firestore Initiated firestore instance
-   * @param filePath  Absolute path to file
-   */
-  constructor(private firestore: admin.firestore.Firestore, filePath: string) {
-    this.name = basename(filePath, extname(filePath))
-
-    const data = importEsmSync(filePath)
-
-    if (
-      !Array.isArray(data) ||
-      (data.length > 0 && typeof data[0] !== 'object')
-    ) {
-      throw new Error(
-        `Seed data for collection '${this.name}' must export array of objects`
-      )
-    }
-
-    this.seedData = data
-  }
-
-  get data() {
-    return this.seedData
-  }
-
-  // seed() {}
-  // deleteAllData() {}
+const getCollectionName = (path: string) => {
+  return basename(path, extname(path))
 }
 
-export class Seeder {
-  private collections: Collection[] = []
+interface CollectionMetadata {
+  name: string
+  path: string
+}
+
+interface CollectionMetadataMap {
+  [collectionName: string]: CollectionMetadata
+}
+
+const collectCollectionMetadata = (seedDir: string): CollectionMetadataMap => {
+  const filenames = findSeedFiles(seedDir)
+
+  return filenames.reduce((acc, filename) => {
+    const collectionName = getCollectionName(filename)
+    const filePath = getUserPath(seedDir, filename)
+    return {
+      ...acc,
+      [collectionName]: {
+        name: collectionName,
+        path: filePath,
+      },
+    }
+  }, {})
+}
+
+const importCollectionSeed = (path: string) => {
+  const content = importEsmSync(path)
+
+  if (
+    !Array.isArray(content) ||
+    (content.length > 0 && typeof content[0] !== 'object')
+  ) {
+    const name = getCollectionName(path)
+    throw new Error(
+      `Seed data for collection '${name}' must export array of objects`
+    )
+  }
+
+  return content
+}
+
+export class Seeder extends EventEmitter {
+  private collectionMetadataMap: CollectionMetadataMap
 
   /**
    * Seeder constructor
@@ -89,30 +97,50 @@ export class Seeder {
     private firestore: admin.firestore.Firestore,
     private options: SeederOptions = defaultSeederOptions
   ) {
-    this.collections = findSeedFiles(options.seedDir).map(
-      (file) => new Collection(firestore, getUserPath(options.seedDir, file))
+    super()
+    const seedDir = options.seedDir
+    this.collectionMetadataMap = collectCollectionMetadata(seedDir)
+  }
+
+  private async execute(collectionMetadata: CollectionMetadata) {
+    const { name, path } = collectionMetadata
+    const { idKey, fresh } = this.options
+    const seedData = importCollectionSeed(path)
+    const emitPayload = { collection: name }
+
+    this.emit('seed:start', emitPayload)
+    this.emit('seed:end', emitPayload)
+  }
+
+  private async executeAll(collectionMetadataList: CollectionMetadata[]) {
+    return await Promise.all(
+      collectionMetadataList.map((metadata) => this.execute(metadata))
     )
   }
 
-  public seed(o: SeedOptions = defaultSeedOptions) {
-    console.log(
-      this.collections.map((c) => c.data),
-      o
+  public seed(collections: string | string[]) {
+    const names = typeof collections === 'string' ? [collections] : collections
+
+    const targetCollectionMetadata = names.map(
+      (collectionName) => this.collectionMetadataMap[collectionName]
     )
+
+    // Check if all metadata exists
+    const notFoundIndex = targetCollectionMetadata.findIndex((data) => !data)
+    if (notFoundIndex !== -1) {
+      throw new Error(`Collection '${names[notFoundIndex]}' not found.`)
+    }
+
+    this.executeAll(targetCollectionMetadata)
   }
 
-  public getCollection(name: string) {
-    return this.collections.find((collection) => collection.name === name)
+  public seedAll() {
+    const names = Object.keys(this.collectionMetadataMap)
+
+    const targetCollectionMetadata = names.map(
+      (collectionName) => this.collectionMetadataMap[collectionName]
+    )
+
+    this.executeAll(targetCollectionMetadata)
   }
-
-  // public seed(collectionNames: string | string[]) {
-  //   const _names =
-  //     typeof collectionNames === 'string' ? [collectionNames] : collectionNames
-
-  //   const collections = _names.map((collectionName) =>
-  //     this.getCollection(collectionName)
-  //   )
-  // }
-
-  // public seedAll() {}
 }
