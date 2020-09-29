@@ -21,14 +21,19 @@ $ yarn add firestore-seeder -D
 
 Then, download the Firebase Admin SDK json secret from the Firebase console, and place it somewhere in your project directory.
 
-Create `seed` directory in your project root (where your package.json is created), and add your config inside package.json:
+Create `seeds` directory in your project root (where your package.json is created), and add your config inside package.json:
 ```json
 "firestore-seeder": {
+  "seedDir": "./seeds",
   "databaseUrl": "https://xxxxxx.firebaseio.com",
   "credential": "./path/to/credential.json"
 },
 ```
 
+Finally, [create seed files]() inside `./seeds` and run:
+```bash
+$ firestore-seeder seed
+```
 
 ## Configuration
 
@@ -89,7 +94,7 @@ The options below are currently supported:
 2. Environment variables
 3. package.json config (Lowest priority)
 
-## Seeding
+## Creating seed files
 
 ### Example seed file
 
