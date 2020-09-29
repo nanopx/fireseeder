@@ -30,7 +30,7 @@ Create `seeds` directory in your project root (where your package.json is create
 },
 ```
 
-Finally, [create seed files]() inside `./seeds` and run:
+Finally, [create seed files](#creating-seed-files) inside `./seeds` and run:
 ```bash
 $ firestore-seeder seed
 ```
