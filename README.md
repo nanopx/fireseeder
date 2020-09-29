@@ -34,7 +34,7 @@ There are 3 ways to configure your project:
 $ firestore-seeder seed [options]
 ```
 
-### Configuration using the package.json
+### Configuration using package.json
 
 ```json
 {
