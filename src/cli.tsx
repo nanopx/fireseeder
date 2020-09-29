@@ -1,9 +1,13 @@
 #!/usr/bin/env node
+
 import React from 'react'
 import meow from 'meow'
 import { render } from 'ink'
-import App from './ui/App'
-import { Config, EnvConfig } from './types'
+import App from '@/ui/App'
+import { collectUserConfig } from '@/lib/utils/collectUserConfig'
+import { setLocale } from './core/Faker'
+
+const userConfig = collectUserConfig()
 
 const cli = meow(
   `
@@ -11,11 +15,15 @@ const cli = meow(
     $ firestore-seeder <seed>
 
   Options
-    --seed-dir, -d  Path to directory containing the seed files
+    --seed-dir, -d      Path to directory containing the seed files
     --database-url, -u  Firestore database URL
-    --credential, -c  Path to firebase admin credentials json path
-    --include-all, -a  Flag to seed all collections
-    --include, -i  Collection name to seed (Only works if --include-all flag is set to false)
+    --credential, -c    Path to firebase admin credentials json
+    --fresh , -f        Remove all documents in collection before seeding
+    --include-all, -a   Flag to seed all collections
+    --include, -i       Collection name to seed (Only works if --include-all flag is set to false)
+    --exclude, -e       Collection name to exclude from seed (Only works if --include-all flag is set to true)
+    --lang, -l          Seed data language
+    --id-key, -k        ID key of the seed data (defaults to '_id')
 
   Examples
     $ firestore-seeder seed -a
@@ -26,29 +34,46 @@ const cli = meow(
       seedDir: {
         type: 'string',
         alias: 'd',
-        default: './seeds',
+        default: userConfig.seedDir,
       },
       databaseUrl: {
         type: 'string',
         alias: 'u',
-        default: '',
+        default: userConfig.databaseUrl,
       },
       credential: {
         type: 'string',
         alias: 'c',
-        default: './firebase-credential.json',
+        default: userConfig.credential,
       },
       includeAll: {
         type: 'boolean',
         alias: 'a',
-        default: false,
+        default: userConfig.includeAll,
       },
       include: {
         type: 'string',
         alias: 'i',
         // @ts-ignore
-        default: [],
+        default: userConfig.include,
         isMultiple: true,
+      },
+      exclude: {
+        type: 'string',
+        alias: 'e',
+        // @ts-ignore
+        default: userConfig.exclude,
+        isMultiple: true,
+      },
+      lang: {
+        type: 'string',
+        alias: 'l',
+        default: userConfig.lang,
+      },
+      idKey: {
+        type: 'string',
+        alias: 'k',
+        default: userConfig.idKey,
       },
       help: {
         alias: 'h',
@@ -65,18 +90,8 @@ if (!['seed'].includes(cli.input[0])) {
   cli.showHelp()
 }
 
-const pkgConfig: Partial<Config> = (cli.pkg['firestore-seeder'] || {}) as any
-const envConfig: Partial<EnvConfig> = {
-  ...(process.env.FSSEEDER_SEED_DIR
-    ? { seedDir: process.env.FSSEEDER_SEED_DIR }
-    : {}),
-  ...(process.env.FSSEEDER_DATABASE_URL
-    ? { seedDir: process.env.FSSEEDER_DATABASE_URL }
-    : {}),
-  ...(process.env.FSSEEDER_CREDENTIAL
-    ? { seedDir: process.env.FSSEEDER_CREDENTIAL }
-    : {}),
-}
-const config: Partial<Config> = { ...pkgConfig, ...envConfig, ...cli.flags }
+const { flags, input } = cli as any
 
-render(<App command={cli.input[0]} {...(config as any)} />)
+setLocale(flags.lang)
+
+render(<App command={input[0]} options={{ ...(flags as any) }} />)
