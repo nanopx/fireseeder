@@ -137,36 +137,45 @@ Path to firebase admin credentials json
 
 Default: `false`
 
-Remove all documents in collection before seeding
+Remove all documents in collection before seeding.
+
+If the fresh option is set to `false`, firestore-seeder will:
+
+1. Automatically create new data if the id is specified,
+2. Otherwise it will merge the seed data by id
 
 ### `lang` [string]
 
 Default: `'en'`
 
-Seed data language
+Seed data language.
 
-### `includeAll` [boolean]
-
-Default: `true`
-
-Flag to seed all collections
+firestore-seeder uses [faker.js](https://github.com/Marak/faker.js) under the hood, check [here](https://github.com/Marak/faker.js/tree/master/locale) for locales available.
 
 ### `include` [string[]]
 
 Default: `[]`
 
-Collection name to seed
-> NOTE: Only works if includeAll flag is set to `false`
+Collection name to seed (All collections are seeded if not specified)
 
 ### `exclude` [string[]]
 
 Default: `[]`
 
 Collection name to exclude from seed
-> NOTE: Only works if includeAll flag is set to `true`
 
 ### `idKey` [string]
 
 Default: `'_id'`
 
-ID key of the seed data (defaults to '_id')
+ID key of the seed data.
+
+The `idKey` option can be specified in various places:
+
+1. (Highest priority) Seed file's `idKey` option specified in each of these API: `mapCollection`, `mapSubCollection`, `collection`, `document`, `subCollection`
+1. CLI Option
+2. Environment variable `FSSEEDER_ID_KEY`
+3. (Lowest priority) package.json config
+
+> NOTE: If the id is not specified in the seed data, a random ID will be created by firestore.
+

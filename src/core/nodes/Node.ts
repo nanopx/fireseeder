@@ -5,7 +5,7 @@ export type NodeType =
   | 'ref'
   | 'geopoint'
 
-export abstract class Node<T = any> {
+export abstract class Node<T = any | any[]> {
   constructor(private __type: NodeType, private __values: T) {}
 
   get type(): NodeType {
@@ -16,15 +16,15 @@ export abstract class Node<T = any> {
     return this.__values
   }
 
-  toObject(): T | T[] {
+  toPlainValues(): T {
     if (this.values instanceof Node) {
-      return this.values.toObject()
+      return this.values.toPlainValues()
     }
 
     if (Array.isArray(this.values)) {
-      return this.values.map((value) => {
-        return value instanceof Node ? value.toObject() : value
-      })
+      return (this.values.map((value) => {
+        return value instanceof Node ? value.toPlainValues() : value
+      }) as unknown) as T
     }
 
     if (typeof this.values === 'object') {
@@ -32,7 +32,7 @@ export abstract class Node<T = any> {
         const value = (this.values as any)[key]
         return {
           ...acc,
-          [key]: value instanceof Node ? value.toObject() : value,
+          [key]: value instanceof Node ? value.toPlainValues() : value,
         }
       }, {} as T)
     }

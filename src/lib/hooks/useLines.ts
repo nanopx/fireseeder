@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 
-export const useLines = <T = Record<string, unknown>>() => {
-  const [linesMap, setLines] = useState<{ [key: string]: T }>({})
+export const useLines = <T = Record<string, unknown>>(
+  initialLines: { [key: string]: T } = {}
+) => {
+  const [linesMap, setLines] = useState<{ [key: string]: T }>(initialLines)
 
   const writeLine = useCallback((id: string, line: T) => {
     setLines((lines) => ({

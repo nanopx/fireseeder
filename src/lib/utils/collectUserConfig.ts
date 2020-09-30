@@ -7,7 +7,6 @@ export interface FirestoreSeederConfig {
   credential: string
   idKey: string
   lang: string
-  includeAll: boolean
   include: string[]
   exclude: string[]
   fresh: boolean
@@ -19,7 +18,6 @@ const defaultConfig: FirestoreSeederConfig = {
   credential: './serviceAccountCredentials.json',
   idKey: '_id',
   lang: 'en',
-  includeAll: true,
   include: [],
   exclude: [],
   fresh: false,

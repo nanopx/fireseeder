@@ -25,13 +25,17 @@ export const useSeeder = (
     [seeder, throwError]
   )
 
-  const seedAll = useCallback(async () => {
-    try {
-      return await seeder.seedAll()
-    } catch (e) {
-      throwError(e)
-    }
-  }, [seeder, throwError])
+  const seedAll = useCallback(
+    async (exclude: string[] = []) => {
+      try {
+        return await seeder.seedAll(exclude)
+      } catch (e) {
+        throwError(e)
+        console.error(e)
+      }
+    },
+    [seeder, throwError]
+  )
 
   return { seeder, seed, seedAll }
 }

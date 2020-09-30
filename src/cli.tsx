@@ -19,9 +19,8 @@ const cli = meow(
     --database-url, -u  Firestore database URL
     --credential, -c    Path to firebase admin credentials json
     --fresh , -f        Remove all documents in collection before seeding
-    --include-all, -a   Flag to seed all collections
-    --include, -i       Collection name to seed (Only works if --include-all flag is set to false)
-    --exclude, -e       Collection name to exclude from seed (Only works if --include-all flag is set to true)
+    --include, -i       Collection name to seed (All collections are seeded if not specified)
+    --exclude, -e       Collection name to exclude
     --lang, -l          Seed data language
     --id-key, -k        ID key of the seed data (defaults to '_id')
 
@@ -50,11 +49,6 @@ const cli = meow(
         type: 'boolean',
         alias: 'f',
         default: userConfig.fresh,
-      },
-      includeAll: {
-        type: 'boolean',
-        alias: 'a',
-        default: userConfig.includeAll,
       },
       include: {
         type: 'string',

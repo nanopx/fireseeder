@@ -17,32 +17,17 @@ export class Document extends Node<Record<string, unknown>> {
     super('document', doc)
   }
 
-  private keysWithoutSubcollection(): string[] {
-    return this.keys().filter(
-      (key) => !this.keysWithNode('subcollection').includes(key)
-    )
-  }
-
   get idKey(): string | null | undefined {
     return this.options.idKey
   }
 
   getId(idKey: string): string | undefined {
-    return this.values[this.idKey || idKey] as string | undefined
+    const id = this.values[this.idKey || idKey]
+    return id ? `${id}` : undefined
   }
 
   keys(): string[] {
     return Object.keys(this.values)
-  }
-
-  toData(): Record<string, unknown> {
-    return this.keysWithoutSubcollection().reduce(
-      (acc, key) => ({
-        ...acc,
-        [key]: this.values[key],
-      }),
-      {}
-    )
   }
 
   getSubCollectionEntries(): [string, SubCollection][] {

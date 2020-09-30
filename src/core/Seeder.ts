@@ -6,6 +6,7 @@ import { getUserPath } from '@/lib/utils/getUserPath'
 import { importEsmSync } from '@/lib/utils/importEsm'
 import { Collection } from './nodes/Collection'
 import { SubCollection } from './nodes/SubCollection'
+import { convertDocumentToFirestoreData } from '@/lib/utils/convertDocumentToFirestoreData'
 
 export interface SeederOptions {
   seedDir: string
@@ -116,20 +117,31 @@ export class Seeder extends EventEmitter {
     ref: FirebaseFirestore.CollectionReference,
     collection: Collection | SubCollection,
     idKey: string
-  ) {
-    // const batch = this.firestore.batch()
-    // collection.forEach((doc) => {
-    //   console.log(idKey, doc.idKey, doc.getId(idKey), doc.toData())
-    //   const id = doc.getId(idKey)
-    //   const docRef = id ? ref.doc(id) : ref.doc()
-    //   // docRef.set()
-    //   const subCollections = doc.getSubCollectionEntries()
-    //   const subCollectionWrites = subCollections.map(([key, subCollection]) => {
-    //     const subCollectionRef = docRef.collection(key)
-    //     return this.writeCollection(subCollectionRef, subCollection, idKey)
-    //   })
-    //   // batch.create()
-    // })
+  ): Promise<number> {
+    const batch = this.firestore.batch()
+
+    const setCollectionToBatch = (
+      collectionRef: FirebaseFirestore.CollectionReference,
+      c: Collection | SubCollection
+    ) => {
+      c.forEach((doc) => {
+        const id = doc.getId(idKey)
+
+        const docRef = id ? collectionRef.doc(id) : collectionRef.doc()
+        const data = convertDocumentToFirestoreData(this.firestore, doc)
+
+        batch.set(docRef, data, { merge: true })
+
+        const subCollections = doc.getSubCollectionEntries()
+        subCollections.forEach(([name, subCollection]) => {
+          setCollectionToBatch(docRef.collection(name), subCollection)
+        })
+      })
+    }
+
+    setCollectionToBatch(ref, collection)
+
+    return batch.commit().then((result) => result.length)
   }
 
   private async deleteCollectionInBatches(
@@ -179,7 +191,7 @@ export class Seeder extends EventEmitter {
     const recordCount = collection.totalRecords()
     if (recordCount > 500) {
       throw new Error(
-        `We only support up to 500 seed records per collection. '${name}' collection currently has ${recordCount}.`
+        `We only support up to 500 seed records per collection (including subcollections). '${name}' collection currently has ${recordCount}.`
       )
     }
 
@@ -191,11 +203,11 @@ export class Seeder extends EventEmitter {
 
     const ref = this.firestore.collection(name)
 
-    this.emit('collection:seedStart', name)
-    const created = await this.writeCollection(ref, collection, idKey)
-    this.emit('collection:seedEnd', name, { created })
+    this.emit('collection:writeStart', name)
+    const written = await this.writeCollection(ref, collection, idKey)
+    this.emit('collection:writeEnd', name, { written })
 
-    return created
+    return written
   }
 
   private async executeAll(collectionMetadataList: CollectionMetadata[]) {
@@ -221,8 +233,10 @@ export class Seeder extends EventEmitter {
     return await this.executeAll(targetCollectionMetadata)
   }
 
-  public async seedAll() {
-    const names = Object.keys(this.collectionMetadataMap)
+  public async seedAll(excludeCollectionNames: string[] = []) {
+    const names = Object.keys(this.collectionMetadataMap).filter(
+      (key) => !excludeCollectionNames.includes(key)
+    )
 
     const targetCollectionMetadata = names.map(
       (collectionName) => this.collectionMetadataMap[collectionName]
