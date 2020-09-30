@@ -99,13 +99,17 @@ The options below are currently supported:
 ### Example seed file
 
 ```js
-import { createSeeds, name } from 'firestore-seeder'
+import { mapCollection, mapSubCollection, ref, geoPoint, name } from 'firestore-seeder'
 
-export default createSeeds(100, (index) => ({
+export default mapCollection(10, (index) => ({
   _id: index + 1,
   firstName: name.firstName(),
   lastName: name.lastName(),
-  subCollection: createSeeds(10, () => ({ key: 'value' }))
+  ref: ref('/mod/1'),
+  geopoint: geoPoint({ lat: 1000, lng: 1000 }),
+  arr: ['a', 'b', 'c'],
+  map: { a: 'b', c: 'd' },
+  subCollection: mapSubCollection(4, () => ({ key: 'value' }))
 }))
 ```
 
