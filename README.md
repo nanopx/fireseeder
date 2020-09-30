@@ -4,6 +4,14 @@ Commandline tool for seeding Firestore data
 
 *This tool is WIP and not ready to be used yet*
 
+## Features
+
+- Supports all firestore data types including GeoPoint, Ref, etc.
+- Supports firestore subcollections
+- Easily create complex seed data with random values
+- Change seed data language
+- Clear collections/subcollections before seeding
+- Seed data merging
 
 ## Getting Started
 

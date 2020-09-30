@@ -20,6 +20,7 @@ export const useSeeder = (
         return await seeder.seed(collections)
       } catch (e) {
         throwError(e)
+        console.log(e)
       }
     },
     [seeder, throwError]

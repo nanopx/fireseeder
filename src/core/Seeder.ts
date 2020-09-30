@@ -156,11 +156,25 @@ export class Seeder extends EventEmitter {
 
     const batch = this.firestore.batch()
 
-    snapshot.docs.forEach((doc) => {
+    const subCollectionRefs = await snapshot.docs.reduce(async (acc, doc) => {
+      const prev = await acc
+      // Add document deletion to batch
       batch.delete(doc.ref)
-    })
 
-    const numDeleted = await batch.commit().then(() => snapshot.size)
+      const refs = await doc.ref.listCollections()
+      return [...prev, ...refs]
+    }, [] as any)
+
+    let numDeleted = await batch.commit().then((result) => result.length)
+
+    // Delete all subcollections
+    for (const subCollectionRef of subCollectionRefs) {
+      numDeleted =
+        numDeleted +
+        (await this.deleteCollectionInBatches(
+          subCollectionRef.limit(batchSize)
+        ))
+    }
 
     if (numDeleted === 0) return deletedCount
 
