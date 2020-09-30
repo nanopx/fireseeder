@@ -1,34 +1,52 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Text } from 'ink'
 import { Loading } from '@/ui/components/Loading'
 import { useSeeder } from '@/core/hooks/useSeeder'
 import { useFirestore } from '@/lib/hooks/useFirestore'
 import { FirestoreSeederConfig } from '@/lib/utils/collectUserConfig'
+import { useLines } from '@/lib/hooks/useLines'
 
 export type SeedCommandProps = FirestoreSeederConfig
 
+interface Log {
+  message: string
+  loading: boolean
+  color?: string
+}
+
 export const SeedCommand: React.FC<SeedCommandProps> = (props) => {
-  const [loading, setLoading] = useState(true)
+  const { lines, writeLine } = useLines<Log>()
 
   const firestore = useFirestore(props)
-  const { seed } = useSeeder(firestore, props)
+  const { seedAll } = useSeeder(firestore, props)
 
   useEffect(() => {
-    seed('hello')
+    seedAll()
+
+    // writeLine('Collection', {
+    //   message: 'Test',
+    //   loading: true,
+    //   // color: 'blue',
+    // })
     // const timerId = setTimeout(() => {
-    //   setLoading(false)
     //   process.exit(0)
     // }, 2000)
     // return () => clearTimeout(timerId)
-  }, [seed])
+  }, [seedAll, writeLine])
 
   return (
-    <Text>
-      {loading ? (
-        <Loading>Seeding...</Loading>
-      ) : (
-        <Text color="green">Done.</Text>
-      )}
-    </Text>
+    <>
+      {lines.map(({ loading, message, color }, i) => (
+        <Fragment key={i}>
+          {loading ? (
+            <Text color={color}>
+              <Loading>{message}</Loading>
+            </Text>
+          ) : (
+            <Text color={color}>{message}</Text>
+          )}
+        </Fragment>
+      ))}
+    </>
   )
 }

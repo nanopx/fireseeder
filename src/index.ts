@@ -1,4 +1,4 @@
-export * from '@/core/createSeed'
+export * from '@/core/seedHelpers'
 export * from '@/core/Faker'
 export * from '@/core/Seeder'
-export * from '@/core/useSeeder'
+export * from '@/core/hooks/useSeeder'
