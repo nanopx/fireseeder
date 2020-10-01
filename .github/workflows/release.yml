@@ -25,7 +25,7 @@ jobs:
           pattern: '0.0.0-dev '
           string: |
             ${{ steps.Changelog.outputs.changelog }}
-          replace-with: ''
+          replace-with: ${{ github.ref }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
