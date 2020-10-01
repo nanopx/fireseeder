@@ -1,5 +1,5 @@
 {
-  "name": "firestore-seeder",
+  "name": "fireseeder",
   "description": "Commandline tool for seeding Firestore",
   "version": "0.0.0",
   "license": "MIT",

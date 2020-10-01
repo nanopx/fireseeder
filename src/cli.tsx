@@ -12,7 +12,7 @@ const userConfig = collectUserConfig()
 const cli = meow(
   `
   Usage
-    $ firestore-seeder <seed>
+    $ fireseeder <seed>
 
   Options
     --seed-dir, -d      Path to directory containing the seed files
@@ -25,7 +25,7 @@ const cli = meow(
     --id-key, -k        ID key of the seed data (defaults to '_id')
 
   Examples
-    $ firestore-seeder seed -a
+    $ fireseeder seed -a
     Seed all data to firestore
   `,
   {

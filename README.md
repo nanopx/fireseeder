@@ -1,6 +1,6 @@
-# firestore-seeder
+# fireseeder
 
-Commandline tool for seeding Firestore data
+Commandline tool for seeding data to Firestore
 
 *This tool is WIP and not ready to be used yet*
 
@@ -15,23 +15,23 @@ Commandline tool for seeding Firestore data
 
 ## Getting Started
 
-Install firestore-seeder using npm:
+Install fireseeder using npm:
 
 ```bash
-$ npm install firestore-seeder --save-dev
+$ npm install fireseeder --save-dev
 ```
 
 or yarn:
 
 ```bash
-$ yarn add firestore-seeder -D
+$ yarn add fireseeder -D
 ```
 
 Then, download the Firebase Admin SDK json secret from the Firebase console, and place it somewhere in your project directory.
 
 Create `seeds` directory in your project root (where your package.json is created), and add your config inside package.json:
 ```json
-"firestore-seeder": {
+"fireseeder": {
   "seedDir": "./seeds",
   "databaseUrl": "https://xxxxxx.firebaseio.com",
   "credential": "./path/to/credential.json"
@@ -40,7 +40,7 @@ Create `seeds` directory in your project root (where your package.json is create
 
 Finally, [create seed files](#creating-seed-files) inside `./seeds` and run:
 ```bash
-$ firestore-seeder seed
+$ fireseeder seed
 ```
 
 ## Configuration
@@ -50,26 +50,26 @@ $ firestore-seeder seed
 There are 3 ways to configure your project:
 
 1. Use the CLI options
-2. Use the `firestore-seeder` key in your package.json
+2. Use the `fireseeder` key in your package.json
 3. Use environment variables
 
 ### CLI usage
 
 ```
-$ firestore-seeder seed [options]
+$ fireseeder seed [options]
 ```
 
 ### Configuration using package.json
 
 ```json
 {
-  "name": "firestore-seeder-example",
+  "name": "fireseeder-example",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "seed": "firestore-seeder seed --fresh"
+    "seed": "fireseeder seed --fresh"
   },
-  "firestore-seeder": {
+  "fireseeder": {
     "databaseUrl": "https://xxxxxx.firebaseio.com",
     "credential": "./secret/credential.json",
     "lang": "en"
@@ -107,7 +107,7 @@ The options below are currently supported:
 ### Example seed file
 
 ```js
-import { mapCollection, mapSubCollection, ref, geoPoint, name } from 'firestore-seeder'
+import { mapCollection, mapSubCollection, ref, geoPoint, name } from 'fireseeder'
 
 export default mapCollection(10, (index) => ({
   _id: index + 1,
@@ -120,6 +120,10 @@ export default mapCollection(10, (index) => ({
   subCollection: mapSubCollection(4, () => ({ key: 'value' }))
 }))
 ```
+
+## API Reference
+
+TODO
 
 ## Options Reference
 
@@ -147,7 +151,7 @@ Default: `false`
 
 Remove all documents in collection before seeding.
 
-If the fresh option is set to `false`, firestore-seeder will:
+If the fresh option is set to `false`, fireseeder will:
 
 1. Automatically create new data if the id is specified,
 2. Otherwise it will merge the seed data by id
@@ -158,7 +162,7 @@ Default: `'en'`
 
 Seed data language.
 
-firestore-seeder uses [faker.js](https://github.com/Marak/faker.js) under the hood, check [here](https://github.com/Marak/faker.js/tree/master/locale) for locales available.
+fireseeder uses [faker.js](https://github.com/Marak/faker.js) under the hood, check [here](https://github.com/Marak/faker.js/tree/master/locale) for locales available.
 
 ### `include` [string[]]
 

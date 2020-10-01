@@ -3,11 +3,11 @@ import { Text } from 'ink'
 import { Loading } from '@/ui/components/Loading'
 import { useSeeder } from '@/core/hooks/useSeeder'
 import { useFirestore } from '@/lib/hooks/useFirestore'
-import { FirestoreSeederConfig } from '@/lib/utils/collectUserConfig'
+import { FireseederConfig } from '@/lib/utils/collectUserConfig'
 import { useLines } from '@/lib/hooks/useLines'
 import { useSeederEvents } from '@/core/hooks/useSeederEvents'
 
-export type SeedCommandProps = FirestoreSeederConfig
+export type SeedCommandProps = FireseederConfig
 
 interface Log {
   message: string | React.ReactNode

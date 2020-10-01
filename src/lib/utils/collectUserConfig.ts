@@ -1,7 +1,7 @@
 import { getUserPath } from './getUserPath'
 import { importJsonSync } from './importJson'
 
-export interface FirestoreSeederConfig {
+export interface FireseederConfig {
   seedDir: string
   databaseUrl: string
   credential: string
@@ -12,7 +12,7 @@ export interface FirestoreSeederConfig {
   fresh: boolean
 }
 
-const defaultConfig: FirestoreSeederConfig = {
+const defaultConfig: FireseederConfig = {
   seedDir: './seeds',
   databaseUrl: '',
   credential: './serviceAccountCredentials.json',
@@ -23,13 +23,13 @@ const defaultConfig: FirestoreSeederConfig = {
   fresh: false,
 }
 
-export const collectUserConfig = (): FirestoreSeederConfig => {
+export const collectUserConfig = (): FireseederConfig => {
   const userPkgPath = getUserPath('package.json')
 
-  const pkgConfig: Partial<FirestoreSeederConfig> =
-    (importJsonSync(userPkgPath) || {})['firestore-seeder'] ?? ({} as any)
+  const pkgConfig: Partial<FireseederConfig> =
+    (importJsonSync(userPkgPath) || {})['fireseeder'] ?? ({} as any)
 
-  const envConfig: Partial<FirestoreSeederConfig> = {
+  const envConfig: Partial<FireseederConfig> = {
     ...(process.env.FSSEEDER_SEED_DIR
       ? { seedDir: process.env.FSSEEDER_SEED_DIR }
       : {}),
