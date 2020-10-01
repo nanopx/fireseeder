@@ -29,8 +29,7 @@
     "test": "jest"
   },
   "files": [
-    "cli.js",
-    "ui.js"
+    "dist"
   ],
   "dependencies": {
     "esm": "^3.2.25",
