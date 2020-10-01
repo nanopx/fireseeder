@@ -44,14 +44,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.PERSONAL_GH_TOKEN }}
-    - name: Cache node_modules
-      id: cache-modules
-      uses: actions/cache@v1
-      with:
-        path: node_modules
-        key: 12.x-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
     - name: Build
-      if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
     - name: Test
       run: npm_config_yes=true npx best-test@latest
