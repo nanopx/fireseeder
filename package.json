@@ -5,6 +5,15 @@
   "license": "MIT",
   "bin": "dist/cli.js",
   "main": "dist/index.js",
+  "author": "nanopx <0nanopx@gmail.com>",
+  "homepage": "https://github.com/nanopx/fireseeder#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nanopx/fireseeder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nanopx/fireseeder/issues"
+  },
   "engines": {
     "node": ">=10"
   },
@@ -24,7 +33,6 @@
     "ui.js"
   ],
   "dependencies": {
-    "@types/faker": "^5.1.2",
     "esm": "^3.2.25",
     "faker": "^5.1.0",
     "firebase-admin": "^9.2.0",
@@ -35,6 +43,7 @@
     "use-error-boundary": "^2.0.4"
   },
   "devDependencies": {
+    "@types/faker": "^5.1.2",
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
