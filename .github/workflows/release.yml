@@ -2,6 +2,9 @@ on:
   push:
     tags:
       - 'v*'
+    paths-ignore:
+      - 'package.json'
+      - 'CHANGELOG.md'
 
 name: Create Release
 
@@ -12,19 +15,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
-          github-token: ${{ secrets.github_token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           output-file: "false"
       - name: Create Release
         uses: actions/create-release@latest
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
