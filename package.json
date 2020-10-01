@@ -1,7 +1,7 @@
 {
   "name": "fireseeder",
   "description": "Commandline tool for seeding Firestore",
-  "version": "0.0.0",
+  "version": "0.0.0-dev",
   "license": "MIT",
   "bin": "dist/cli.js",
   "main": "dist/index.js",
