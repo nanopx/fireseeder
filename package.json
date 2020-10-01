@@ -11,6 +11,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "prepare": "npm run build",
     "prebuild": "rimraf dist/",
     "build": "npm run build:types && npm run build:js",
     "watch": "npm run build:js -- --watch",
