@@ -32,7 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PERSONAL_GH_TOKEN }}
     - name: Cache node_modules
       id: cache-modules
       uses: actions/cache@v1
