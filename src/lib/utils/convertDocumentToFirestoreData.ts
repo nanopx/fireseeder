@@ -5,11 +5,16 @@ import { Ref } from '@/core/nodes/Ref'
 
 export const convertDocumentToFirestoreData = (
   db: FirebaseFirestore.Firestore,
-  doc: Document
+  doc: Document,
+  withoutKeys: string[] = []
 ): Record<string, unknown> => {
   const keysWithoutSubCollection = doc
     .keys()
-    .filter((key) => !doc.keysWithNode('subcollection').includes(key))
+    .filter(
+      (key) =>
+        !doc.keysWithNode('subcollection').includes(key) &&
+        !withoutKeys.includes(key)
+    )
 
   return keysWithoutSubCollection.reduce((acc, key) => {
     let value = doc.values[key]

@@ -4,9 +4,9 @@ on:
       - '**'
     tags-ignore:
       - 'v*'
-  pull_request:
-    branches:
-      - '**'
+  # pull_request:
+  #   branches:
+  #     - '**'
 
 name: Build, Test and Publish
 

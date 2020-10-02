@@ -2,8 +2,6 @@
 
 Commandline tool for seeding data to Firestore
 
-*This tool is WIP and not ready to be used yet*
-
 ## Features
 
 - Supports all firestore data types including GeoPoint, Ref, etc.
@@ -73,7 +71,7 @@ $ fireseeder seed [options]
     "databaseUrl": "https://xxxxxx.firebaseio.com",
     "credential": "./secret/credential.json",
     "lang": "en"
-  },
+  }
 }
 ```
 
@@ -114,7 +112,7 @@ export default mapCollection(10, (index) => ({
   firstName: name.firstName(),
   lastName: name.lastName(),
   ref: ref('/mod/1'),
-  geopoint: geoPoint({ lat: 1000, lng: 1000 }),
+  geopoint: geoPoint({ lat: 1, lng: 1 }),
   arr: ['a', 'b', 'c'],
   map: { a: 'b', c: 'd' },
   subCollection: mapSubCollection(4, () => ({ key: 'value' }))
