@@ -15,6 +15,14 @@ export class Document extends Node<Record<string, unknown>> {
     private options: DocumentOptions = defaultDocumentOptions
   ) {
     super('document', doc)
+
+    if (Array.isArray(doc)) {
+      throw new Error('Document value cannot be an array.')
+    }
+
+    if (typeof doc !== 'object') {
+      throw new Error('Document value must be an object.')
+    }
   }
 
   get idKey(): string | null | undefined {
