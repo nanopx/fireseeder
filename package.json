@@ -24,7 +24,7 @@
     "prebuild": "rimraf dist/",
     "build": "npm run build:types && npm run build:js",
     "watch": "npm run build:js -- --watch",
-    "build:types": "tsc --emitDeclarationOnly",
+    "build:types": "tsc -P tsconfig.json --emitDeclarationOnly",
     "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
     "test": "jest",
     "test:watch": "jest --watch"
