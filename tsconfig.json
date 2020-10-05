@@ -9,14 +9,14 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "lib": ["es6", "dom", "es2016"],
-    "baseUrl": ".",
+    "baseUrl": "./src/",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "types": ["react", "jest"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     },
     "outDir": "dist"
   }
