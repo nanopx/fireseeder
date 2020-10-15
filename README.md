@@ -88,6 +88,7 @@ The options below are currently supported:
 - `FSSEEDER_SEED_DIR`
 - `FSSEEDER_DATABASE_URL`
 - `FSSEEDER_CREDENTIAL`
+- `FSSEEDER_EMULATOR`
 - `FSSEEDER_ID_KEY`
 - `FSSEEDER_LANG`
 
@@ -142,6 +143,12 @@ Firestore database URL
 Default: `'./serviceAccountCredentials.json'`
 
 Path to firebase admin credentials json
+
+### `emulator` [string]
+
+Default: `''`
+
+Firestore emulator host
 
 ### `fresh` [boolean]
 

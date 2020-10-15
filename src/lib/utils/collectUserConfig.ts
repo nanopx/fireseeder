@@ -5,6 +5,7 @@ export interface FireseederConfig {
   seedDir: string
   databaseUrl: string
   credential: string
+  emulator: string
   idKey: string
   lang: string
   include: string[]
@@ -16,6 +17,7 @@ const defaultConfig: FireseederConfig = {
   seedDir: './seeds',
   databaseUrl: '',
   credential: './serviceAccountCredentials.json',
+  emulator: '',
   idKey: '_id',
   lang: 'en',
   include: [],
@@ -39,6 +41,9 @@ export const collectUserConfig = (): FireseederConfig => {
     ...(process.env.FSSEEDER_CREDENTIAL
       ? { credential: process.env.FSSEEDER_CREDENTIAL }
       : {}),
+    ...(process.env.FSSEEDER_EMULATOR
+      ? { emulator: process.env.FSSEEDER_EMULATOR }
+      : {}),  
     ...(process.env.FSSEEDER_ID_KEY
       ? { idKey: process.env.FSSEEDER_ID_KEY }
       : {}),
