@@ -1,4 +1,4 @@
-import * as faker from 'faker'
+import faker from 'faker'
 
 const {
   createCard: _createCard,
@@ -35,5 +35,5 @@ export const {
 } = faker
 
 export const setLocale = (locale: string): void => {
-  faker.setLocale(locale)
+  faker.locale = locale
 }
