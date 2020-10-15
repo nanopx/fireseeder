@@ -18,6 +18,7 @@ const cli = meow(
     --seed-dir, -d      Path to directory containing the seed files
     --database-url, -u  Firestore database URL
     --credential, -c    Path to firebase admin credentials json
+    --emulator, -e      Firestore emulator host (If you want to use emulator firestore)
     --fresh , -f        Remove all documents in collection before seeding
     --include, -i       Collection name to seed (All collections are seeded if not specified)
     --exclude, -e       Collection name to exclude
@@ -44,6 +45,11 @@ const cli = meow(
         type: 'string',
         alias: 'c',
         default: userConfig.credential,
+      },
+      emulator: {
+        type: 'string',
+        alias: 'e',
+        default: userConfig.emulator,
       },
       fresh: {
         type: 'boolean',
